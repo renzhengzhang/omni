@@ -21,16 +21,16 @@ $(document).ready(() => {
 		browser.runtime.sendMessage({request:"get-actions"}, (response) => {
 			actions = response.actions;
 			populateOmni();
-		});
 
-		// New tab page workaround
-		if (window.location.href == "browser-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html") {
-			isOpen = true;
-			$("#omni-extension").removeClass("omni-closing");
-			window.setTimeout(() => {
-				$("#omni-extension input").focus();
-			}, 100);
-		}
+			// New tab page workaround
+			if (window.location.href == browser.runtime.getURL("newtab.html")) {
+				isOpen = true;
+				$("#omni-extension").removeClass("omni-closing");
+				window.setTimeout(() => {
+					$("#omni-extension input").focus();
+				}, 100);
+			}
+		});
 	});
 
 	function renderAction(action, index, keys, img) {
@@ -132,7 +132,7 @@ $(document).ready(() => {
 
 	// Close the omni
 	function closeOmni() {
-		if (window.location.href == "browser-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html") {
+		if (window.location.href == browser.runtime.getURL("newtab.html")) {
 			browser.runtime.sendMessage({request:"restore-new-tab"});
 		} else {
 			isOpen = false;
