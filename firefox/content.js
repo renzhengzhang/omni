@@ -69,8 +69,7 @@ $(document).ready(() => {
 			
 			// Check if the action has an emoji or a favicon
 			if (!action.emoji) {
-				var onload = 'if ("naturalHeight" in this) {if (this.naturalHeight + this.naturalWidth === 0) {this.onerror();return;}} else if (this.width + this.height == 0) {this.onerror();return;}';
-				var img = "<img src='"+action.favIconUrl+"' alt='favicon' onload='"+onload+"' onerror='this.src=&quot;"+browser.runtime.getURL("/assets/globe.svg")+"&quot;' class='omni-icon'>";
+				var img = "<img src='"+action.favIconUrl+"' alt='favicon' class='omni-icon'>";
 				renderAction(action, index, keys, img);
 			} else {
 				var img = "<span class='omni-emoji-action'>"+action.emojiChar+"</span>";
@@ -94,15 +93,20 @@ $(document).ready(() => {
 					});
 					keys += "</div>";
 			}
-			var img = "<img src='"+action.favIconUrl+"' alt='favicon' onerror='this.src=&quot;"+browser.runtime.getURL("/assets/globe.svg")+"&quot;' class='omni-icon'>";
+			var img = "<img src='"+action.favIconUrl+"' alt='favicon' class='omni-icon'>";
 			if (action.emoji) {
 				img = "<span class='omni-emoji-action'>"+action.emojiChar+"</span>"
 			}
+			var fallbackSrc = browser.runtime.getURL("/assets/globe.svg");
 			if (index != 0) {
-				return $("<div class='omni-item' data-index='"+index+"' data-type='"+action.type+"' data-url='"+action.url+"'>"+img+"<div class='omni-item-details'><div class='omni-item-name'>"+action.title+"</div><div class='omni-item-desc'>"+action.url+"</div></div>"+keys+"<div class='omni-select'>Select <span class='omni-shortcut'>⏎</span></div></div>")[0]
+				var el = $("<div class='omni-item' data-index='"+index+"' data-type='"+action.type+"' data-url='"+action.url+"'>"+img+"<div class='omni-item-details'><div class='omni-item-name'>"+action.title+"</div><div class='omni-item-desc'>"+action.url+"</div></div>"+keys+"<div class='omni-select'>Select <span class='omni-shortcut'>⏎</span></div></div>");
 			} else {
-				return $("<div class='omni-item omni-item-active' data-index='"+index+"' data-type='"+action.type+"' data-url='"+action.url+"'>"+img+"<div class='omni-item-details'><div class='omni-item-name'>"+action.title+"</div><div class='omni-item-desc'>"+action.url+"</div></div>"+keys+"<div class='omni-select'>Select <span class='omni-shortcut'>⏎</span></div></div>")[0]
+				var el = $("<div class='omni-item omni-item-active' data-index='"+index+"' data-type='"+action.type+"' data-url='"+action.url+"'>"+img+"<div class='omni-item-details'><div class='omni-item-name'>"+action.title+"</div><div class='omni-item-desc'>"+action.url+"</div></div>"+keys+"<div class='omni-select'>Select <span class='omni-shortcut'>⏎</span></div></div>");
 			}
+			if (!action.emoji) {
+				el.find("img").on("error", function() { this.src = fallbackSrc; });
+			}
+			return el[0];
 		}
 		actions.length && new VirtualizedList.default($("#omni-extension #omni-list")[0], {
 			height: 400,
