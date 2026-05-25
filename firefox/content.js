@@ -131,8 +131,8 @@ $(document).ready(() => {
 	}
 
 	// Close the omni
-	function closeOmni() {
-		if (window.location.href == browser.runtime.getURL("newtab.html")) {
+	function closeOmni(restoreTab) {
+		if (restoreTab !== false && window.location.href == browser.runtime.getURL("newtab.html")) {
 			browser.runtime.sendMessage({request:"restore-new-tab"});
 		} else {
 			isOpen = false;
@@ -289,7 +289,7 @@ $(document).ready(() => {
 	// Handle actions from the omni
 	function handleAction(e) {
 		var action = actions[$(".omni-item-active").attr("data-index")];
-		closeOmni();
+		closeOmni(false);
 		if ($(".omni-extension input").val().toLowerCase().startsWith("/remove")) {
 			browser.runtime.sendMessage({request:"remove", type:action.type, action:action});
 		} else if ($(".omni-extension input").val().toLowerCase().startsWith("/history")) {
