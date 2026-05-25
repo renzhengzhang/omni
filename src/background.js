@@ -179,7 +179,7 @@ chrome.action.onClicked.addListener((tab) => {
 chrome.commands.onCommand.addListener((command) => {
 	if (command === "open-omni") {
 		getCurrentTab().then((response) => {
-			if (!response.url.includes("chrome://") && !response.url.includes("chrome.google.com")) {
+			if (!response.url.includes("chrome://") && !response.url.includes("chrome.google.com") && !response.url.includes("chrome-extension://")) {
 				chrome.tabs.sendMessage(response.id, {request: "open-omni"});
 			} else {
 				chrome.tabs.create({

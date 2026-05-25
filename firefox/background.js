@@ -177,7 +177,7 @@ browser.browserAction.onClicked.addListener((tab) => {
 browser.commands.onCommand.addListener((command) => {
 	if (command === "open-omni") {
 		getCurrentTab().then((response) => {
-			if (!response.url.includes("browser://") && !response.url.includes("browser.google.com")) {
+			if (!response.url.includes("about:") && !response.url.includes("moz-extension://")) {
 				browser.tabs.sendMessage(response.id, {request: "open-omni"});
 			} else {
 				browser.tabs.create({
