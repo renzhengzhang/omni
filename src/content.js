@@ -20,16 +20,17 @@ $(document).ready(() => {
 		// Request actions from the background
 		chrome.runtime.sendMessage({request:"get-actions"}, (response) => {
 			actions = response.actions;
-		});
 
-		// New tab page workaround
-		if (window.location.href == "chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html") {
-			isOpen = true;
-			$("#omni-extension").removeClass("omni-closing");
-			window.setTimeout(() => {
-				$("#omni-extension input").focus();
-			}, 100);
-		}
+			// New tab page workaround
+			if (window.location.href == chrome.runtime.getURL("newtab.html")) {
+				isOpen = true;
+				$("#omni-extension").removeClass("omni-closing");
+				populateOmni();
+				window.setTimeout(() => {
+					$("#omni-extension input").focus();
+				}, 100);
+			}
+		});
 	});
 
 	function renderAction(action, index, keys, img) {
@@ -131,7 +132,7 @@ $(document).ready(() => {
 
 	// Close the omni
 	function closeOmni() {
-		if (window.location.href == "chrome-extension://mpanekjjajcabgnlbabmopeenljeoggm/newtab.html") {
+		if (window.location.href == chrome.runtime.getURL("newtab.html")) {
 			chrome.runtime.sendMessage({request:"restore-new-tab"});
 		} else {
 			isOpen = false;
